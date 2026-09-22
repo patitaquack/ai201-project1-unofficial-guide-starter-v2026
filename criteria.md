@@ -57,21 +57,13 @@ in at least 4 of 5 tries.
 
 ## 4. Something about your chunks
 
-<!-- YOU WRITE THIS ONE.
-
-     How would you know if your chunks were the right size? Name something
-     countable or observable.
-
-     Examples of the right shape — don't copy these, they should come from
-     what you actually saw in Milestone 3:
-       - "At least 4 of 5 sampled chunks read as a complete thought, with no
-          sentence cut in half at either end."
-       - "No chunk is shorter than 200 characters, since anything below that
-          in my corpus turned out to be a heading with no content under it." -->
-
+No chunk ends mid-sentence
 
 
 **Why this target:**
+
+the starters fixed 800 character splitter cuts 33 of 51 chunks mid- sentece. My guides are markdown with sections of 150-400 characters, each a selfcontained topic. A splitter respects the boundaries and shouldn't need to cut a sentence.
+
 
 
 
@@ -79,17 +71,14 @@ in at least 4 of 5 tries.
 
 ## 5. Your choice
 
-<!-- YOU WRITE THIS ONE TOO.
-
-     Pick something you actually care about getting right. It could be about
-     speed, about refusals, about a particular kind of question your corpus
-     handles badly, about source attribution being correct rather than merely
-     present — anything, as long as it names a number or an observable
-     outcome. -->
+For the 5 questions the source named is the guide for the town the question asks about.
 
 
 
 **Why this target:**
+
+All 14 guides share a structure and vocabulary, every one has a "Getting there" section about buses and parking. 
+
 
 
 
