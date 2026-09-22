@@ -22,6 +22,7 @@ to it, write down what you saw, and move on. That's a real observation about
 your pipeline, not giving up.
 """
 
+import re
 from dataclasses import dataclass
 
 import config
@@ -97,7 +98,47 @@ def split_documents(documents: list[Document]) -> list[Chunk]:
       - Would splitting on paragraph breaks keep more thoughts intact than
         splitting on a character count?
     """
-    return fallback_split(documents)
+    chunks: list[Chunk] = []
+
+    for doc in documents:
+        lines = doc.text.strip().split("\n")
+
+        # The "# Halden Bay" title is the only place the town is named — the
+        # sections underneath say "the harbour", never "Halden Bay". Every
+        # chunk carries the title so it can be told apart from the other 13
+        # guides, which all describe parking and food in the same words.
+        if lines and lines[0].startswith("# "):
+            title = lines[0].lstrip("# ").strip()
+        else:
+            title = doc.source
+
+        sections = re.split(r"(?m)^## ", doc.text)
+
+        # Text sitting under the title before the first "## " heading. Four of
+        # the guides have nothing there but the title itself, which is why this
+        # is checked rather than assumed.
+        preamble = "\n".join(sections[0].strip().split("\n")[1:]).strip()
+
+        pieces: list[tuple[str, str]] = []
+        if preamble:
+            pieces.append(("Overview", preamble))
+
+        for section in sections[1:]:
+            heading, _, body = section.partition("\n")
+            if body.strip():
+                pieces.append((heading.strip(), body.strip()))
+
+        for index, (heading, body) in enumerate(pieces):
+            chunks.append(
+                Chunk(
+                    text=f"{title} — {heading}\n\n{body}",
+                    source=doc.source,
+                    index=index,
+                    produced_by="chunker.py::split_documents",
+                )
+            )
+
+    return chunks
 
 
 def describe(chunks: list[Chunk]) -> str:

@@ -29,18 +29,32 @@
 
 ## Chunking Strategy
 
-**Chunk size:**
-**Overlap:**
+**Chunk size:** one `##` section per chunk — not a fixed number. In practice
+183 to 758 characters, 319 on average.
+**Overlap:** none.
 
-<!-- What about YOUR documents made you pick these numbers? Short posts and
-     long sectioned guides don't want the same chunking, and "800 seemed
-     reasonable" earns nothing. Point at something you noticed when you read
-     the documents in Milestone 1.
+Every document in `city_guides` is a Markdown guide to one town, divided into
+labelled `##` sections — Getting there, Eat and drink, When to go. Each section
+is a self-contained topic, and no section depends on the one before it. The
+document already says where the boundaries are, so a fixed character count is
+the wrong instrument: it ignores the structure that's sitting right there.
 
-     If you changed your mind partway through, say so and say why. That's worth
-     more than pretending you got it right first time.
+I measured all 98 sections before writing anything. The largest is 708
+characters, so nothing needs a size cap as a backstop — splitting on headings
+alone never produces a chunk too big to handle. And because a heading-aligned
+cut never lands mid-sentence, there is nothing for an overlap to rescue, which
+is the only job overlap was doing.
 
-     Milestone 3. -->
+Every chunk is prefixed with its document title. This turned out to matter more
+than the split itself: the town name appears only in the `# Givens Mill` title
+at the top of the file, never in the sections beneath it, which say "the mill"
+and "the tearoom". Without the prefix, 13 other guides describe their parking
+and their pubs in near-identical language and nothing distinguishes them.
+
+The starter's fixed 800-character windows gave 51 chunks, 33 of them cut
+mid-sentence and 8 under 200 characters — the shortest was 24, a bare
+`## Getting there` heading with its content sliced into the next chunk. The new
+strategy gives 94 chunks, none cut mid-sentence, shortest 183.
 
 ## Sample Chunks
 
@@ -53,29 +67,45 @@
 
      Milestone 3. -->
 
-**Chunk 1** — source: `` — produced by: ``
+**Chunk 1** — source: `guide_accessibility.md#0` — produced by: `chunker.py::split_documents`
 
 ```
+Getting around the region with limited mobility — Overview
+
+An honest assessment rather than a promotional one. Some of these places are
+difficult and it is better to know in advance.
 ```
 
-**Chunk 2** — source: `` — produced by: ``
+**Chunk 2** — source: `guide_corry_vale.md#5` — produced by: `chunker.py::split_documents`
 
 ```
+Corry Vale — Where to stay
+
+Perhaps thirty beds in the entire valley, spread across two pubs and a handful of farmhouse rooms. In summer these are booked months ahead. Camping is permitted on two marked fields and nowhere else.
 ```
 
-**Chunk 3** — source: `` — produced by: ``
+**Chunk 3** — source: `guide_givens_mill.md#2` — produced by: `chunker.py::split_documents`
 
 ```
+Givens Mill — Getting around
+
+Everything is on one street along the river. The mill is at one end and the church at the other, eight minutes apart. The riverside path continues in both directions for as far as you want to walk.
 ```
 
-**Chunk 4** — source: `` — produced by: ``
+**Chunk 4** — source: `guide_kestrelford.md#4` — produced by: `chunker.py::split_documents`
 
 ```
+Kestrelford — What to see
+
+The market square on a Saturday morning is the main event and has run continuously since the 1400s. The parish church has a 13th-century tower you can climb for £2. The old trackbed walk runs six miles to the next village along an easy gradient and is the best half-day here.
 ```
 
-**Chunk 5** — source: `` — produced by: ``
+**Chunk 5** — source: `guide_pellew_sands.md#6` — produced by: `chunker.py::split_documents`
 
 ```
+Pellew Sands — When to go
+
+June and September for the beach without the crowds. July and August are busy and the town is at its most itself, for better and worse. Winter is bleak, largely closed, and has a following among people who like that sort of thing.
 ```
 
 ## Sample Answer
