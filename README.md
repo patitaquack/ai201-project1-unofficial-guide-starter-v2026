@@ -21,11 +21,18 @@
 
 ## What This Does
 
-<!-- Three or four sentences. Which corpus you picked, and the kinds of
-     questions your system answers. Write it for someone who has never seen
-     this repo.
+This is a question-answering system over `city_guides`, a corpus of 14 travel
+guides to towns and villages in one fictional region — Givens Mill, Halden Bay,
+Thornby Wells and eleven others — plus four cross-cutting guides on eating,
+walking, transport and accessibility.
 
-     Milestone 5. -->
+It answers practical questions a visitor would actually ask: what time the mill tearoom opens, where to find fresh seafood, whether a town is manageable on
+foot, where you can go birdwatching. Questions with a right answer sitting in
+the documents, not matters of taste.
+
+It answers from the guides and nothing else. Every answer names the file it came
+from, and a question the guides don't cover gets "I don't have enough
+information about that" rather than a plausible invention.
 
 ## Chunking Strategy
 
@@ -58,55 +65,47 @@ strategy gives 94 chunks, none cut mid-sentence, shortest 183.
 
 ## Sample Chunks
 
-<!-- Five chunks, pasted as text. Label each one and name the file it came from
-     AND the function that produced it — the grader checks your code against
-     what you claim here.
 
-     `python app.py chunks -n 5` prints all three for you. Copy them straight
-     across.
-
-     Milestone 3. -->
 
 **Chunk 1** — source: `guide_accessibility.md#0` — produced by: `chunker.py::split_documents`
 
-```
 Getting around the region with limited mobility — Overview
 
 An honest assessment rather than a promotional one. Some of these places are
 difficult and it is better to know in advance.
-```
+
 
 **Chunk 2** — source: `guide_corry_vale.md#5` — produced by: `chunker.py::split_documents`
 
-```
+
 Corry Vale — Where to stay
 
 Perhaps thirty beds in the entire valley, spread across two pubs and a handful of farmhouse rooms. In summer these are booked months ahead. Camping is permitted on two marked fields and nowhere else.
-```
+
 
 **Chunk 3** — source: `guide_givens_mill.md#2` — produced by: `chunker.py::split_documents`
 
-```
+
 Givens Mill — Getting around
 
 Everything is on one street along the river. The mill is at one end and the church at the other, eight minutes apart. The riverside path continues in both directions for as far as you want to walk.
-```
+
 
 **Chunk 4** — source: `guide_kestrelford.md#4` — produced by: `chunker.py::split_documents`
 
-```
+
 Kestrelford — What to see
 
 The market square on a Saturday morning is the main event and has run continuously since the 1400s. The parish church has a 13th-century tower you can climb for £2. The old trackbed walk runs six miles to the next village along an easy gradient and is the best half-day here.
-```
+
 
 **Chunk 5** — source: `guide_pellew_sands.md#6` — produced by: `chunker.py::split_documents`
 
-```
+
 Pellew Sands — When to go
 
 June and September for the beach without the crowds. July and August are busy and the town is at its most itself, for better and worse. Winter is bleak, largely closed, and has a following among people who like that sort of thing.
-```
+
 
 ## Sample Answer
 
@@ -117,23 +116,23 @@ June and September for the beach without the crowds. July and August are busy an
 
 **Answer:**
 
-```
+
   (best distance 0.325, cutoff 0.7)
 
 The tearoom is open from 10 to 4 daily, except on Tuesdays (guide_givens_mill.md).
 
 Sources retrieved: guide_givens_mill.md
-```
+
 
 **My relevance cutoff:** 0.70
 
 The two groups came out cleanly separated, with nothing between them:
 
-```
+`
 in corpus      0.325 – 0.573
 out of scope   0.810 – 0.969
 gap            0.573 → 0.810   (0.238 wide)
-```
+
 
 I put the cutoff at 0.70, near the middle of that gap. The starter's 0.6 also
 works — it refuses all five out-of-scope questions and admits all five real
@@ -177,23 +176,17 @@ to tighten.
 
 ## How I Used AI
 
-<!-- Two specific moments. For each: what you asked for, what came back, and
-     what you changed about it.
 
-     "I asked Claude to write the chunking function from my notes. It ignored
-     the overlap, so I added that myself" is the level of detail we're after.
-     "I used AI to help me code" is not.
 
-     Milestone 5. -->
+**1. Checking my test questions against the corpus.** I asked Claude to check my questions and expected answers to see if this is something that a user would ask. I also asked if the answers would be retractable with the chunking I chose.
 
-**1.**
+**2. Designing the chunker.** I asked for a chunking strategy for my corpus
+rather than a function to paste in. It measured all 98 `##` sections first —
+largest 708 characters, so nothing needs a size cap — and proposed splitting on
+headings with no overlap, which matched what I'd seen reading the guides.
 
-**2.**
 
-<!-- ── Stretch features ─────────────────────────────────────────────────────
-     Doing one? Say so here BEFORE you start. A feature this README never
-     claims earns nothing.
-     ───────────────────────────────────────────────────────────────────────── -->
+──────────────────────────────────────────────── -->
 
 ---
 
