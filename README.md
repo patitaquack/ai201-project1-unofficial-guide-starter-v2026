@@ -113,27 +113,67 @@ June and September for the beach without the crowds. July and August are busy an
 <!-- One complete question and answer, pasted as text, with the source line
      visible. Milestone 4. -->
 
-**Question:**
+**Question:** What are the operating hours of the tearoom in Givens Mill?
 
 **Answer:**
 
 ```
+  (best distance 0.325, cutoff 0.7)
+
+The tearoom is open from 10 to 4 daily, except on Tuesdays (guide_givens_mill.md).
+
+Sources retrieved: guide_givens_mill.md
 ```
 
-**My relevance cutoff:**
+**My relevance cutoff:** 0.70
 
-<!-- The number you set in config.py, and how you got there.
+The two groups came out cleanly separated, with nothing between them:
 
-     You ran five questions your corpus covers and the five in OUT_OF_SCOPE
-     that it clearly doesn't, and wrote down the best distance for each. What
-     did those two groups look like? Where was the gap? Put the actual numbers
-     here — the table below wants all ten rows.
+```
+in corpus      0.325 – 0.573
+out of scope   0.810 – 0.969
+gap            0.573 → 0.810   (0.238 wide)
+```
 
-     Milestone 4. -->
+I put the cutoff at 0.70, near the middle of that gap. The starter's 0.6 also
+works — it refuses all five out-of-scope questions and admits all five real
+ones — but it clears my worst real question by only 0.027. My two weakest
+questions, "Is there a town with a tearoom?" at 0.569 and "Where can I go
+birdwatching?" at 0.573, are the ones that don't name a town, and a vaguer
+phrasing of either would land above 0.6 and be refused with the answer sitting
+right there. 0.70 leaves 0.13 of room above them and still sits 0.11 below the
+nearest out-of-scope question.
+
+What I get wrong at 0.70: the gap is this wide because my out-of-scope
+questions are about Mongolia and Rust loops — absurd, not merely off-topic. A
+question about my towns whose answer isn't in the guides scores far lower and
+sails straight through. "How far is it from Givens Mill to Halden Bay?" — a
+distance the corpus never states — comes back at 0.351, nowhere near any
+cutoff I could set without refusing real questions. The gate cannot catch that
+case, by construction; only the grounding instruction can, and it does.
+
+**top-k: 5, unchanged.** Worth keeping rather than lowering: for "Is there a
+town with a tearoom?" the chunk holding the answer comes back third, behind an
+unrelated Corry Vale overview. At top-k 2 that question would fail outright.
+
+**Grounding instruction: left as the starter wrote it.** I tested it on the
+Givens Mill to Halden Bay distance, which passes the gate at 0.351 and pulls
+three genuinely relevant guides, none of which contains a mileage. It answered
+"I don't have enough information" instead of estimating one, so I had nothing
+to tighten.
 
 | Question | In corpus? | Best distance |
 |---|---|---|
-|  |  |  |
+| What are the operating hours of the tearoom in Givens Mill? | Yes | 0.325 |
+| Is Thornby Wells easy for walking? | Yes | 0.372 |
+| Where can I find fresh seafood? | Yes | 0.465 |
+| Is there a town with a tearoom? | Yes | 0.569 |
+| Where can I go birdwatching? | Yes | 0.573 |
+| What is the capital of Mongolia? | No | 0.810 |
+| What is the recommended dosage of ibuprofen for a headache? | No | 0.835 |
+| How do I write a for loop in Rust? | No | 0.861 |
+| How do I change the oil in a diesel engine? | No | 0.881 |
+| Who won the 1994 World Cup? | No | 0.969 |
 
 ## How I Used AI
 
