@@ -23,8 +23,12 @@ For at least 4 of my 5 test questions, the retrieved chunks include one that
 contains the answer.
 
 **Why this target:**
-<!-- e.g. "One of my questions is about a topic only two documents mention, so
-     I expect that one to be hard." -->
+
+Four of my questions are about topics several guides mention, so I expect those
+to be found easily. But "Where can I go birdwatching?" only has one guide that
+covers it — `guide_elder_ness.md` is the only file in my corpus that mentions
+birds at all. With just one document to find, that's the one I expect to be
+hard, so I left room for one miss.
 
 ---
 
@@ -33,8 +37,10 @@ contains the answer.
 Every answer the system produces names at least one source document.
 
 **Why this target:**
-<!-- Why all five and not four? What about your setup makes that achievable —
-     or what would have to go wrong for it not to be? -->
+
+
+
+I set this at all five because the system doesn't have to do extra work by finding anything else to do. The filename is already in the prompt, and every chunk gets a (file name) line above it, the prompt tells model to name the file it used. It seem simple enough that all five should pass. The criterion is checking if it will follow the simple instruction each time.
 
 ---
 
@@ -69,15 +75,19 @@ the starters fixed 800 character splitter cuts 33 of 51 chunks mid- sentece. My 
 
 ---
 
-## 5. Your choice
+## 5. the source named actually contains the answer
 
-For the 5 questions the source named is the guide for the town the question asks about.
-
+For at least 4 of my 5 questions, the guide the answer names is one that actually contains the answer.
 
 
 **Why this target:**
 
-All 14 guides share a structure and vocabulary, every one has a "Getting there" section about buses and parking. 
+This asks if it cited a file that really has the information.
+It is worth testing, so that the model can name a file that it did use to answer.
+
+
+
+
 
 
 
