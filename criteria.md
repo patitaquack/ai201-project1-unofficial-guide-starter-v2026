@@ -40,7 +40,13 @@ Every answer the system produces names at least one source document.
 
 
 
-I set this at all five because the system doesn't have to do extra work by finding anything else to do. The filename is already in the prompt, and every chunk gets a (file name) line above it, the prompt tells model to name the file it used. It seem simple enough that all five should pass. The criterion is checking if it will follow the simple instruction each time.
+I set this at all five because the system doesn't have to find anything extra to do it. The filename is already in the prompt — every chunk gets a
+`[from guide_elder_ness.md]` line above it, and the system prompt tells the
+model to name the file it used. It seems simple enough that all five should
+pass. The criterion is checking whether it will follow that simple instruction
+each time.
+
+
 
 ---
 
@@ -58,6 +64,8 @@ in at least 4 of 5 tries.
 **Why this target:**
 <!-- What did your distances look like when you set the cutoff in Milestone 4?
      Was there a clean gap, or did the two groups overlap? -->
+
+     When i set the cutoff for Milestone 4, there was a clean gap. Five questions had best distances between 0.325 and 0.573. The five out-of-scope questions were between 0.810 and 969, nothing landed in between. The gap is more that 0.2 wide- so I put the cutoff at 0.70, roughly in the middle of it. I set the target at 4 of 5 rather than 5 of 5 because gap being clean one moment foesnt mean every out-of-corpus question will be above 0.810.
 
 ---
 

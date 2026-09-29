@@ -210,15 +210,65 @@ headings with no overlap, which matched what I'd seen reading the guides.
 
 | Criterion | Target | Run 1 | Run 2 | Run 3 | Verdict |
 |---|---|---|---|---|---|
-| 1. Retrieved chunk contains the answer | 4 of 5 |  |  |  |  |
-| 2. Every answer names a source | 5 of 5 |  |  |  |  |
-| 3. Gate stops out-of-corpus questions | 4 of 5 |  |  |  |  |
-| 4. | | | | | |
-| 5. | | | | | |
+| 1. Retrieved chunk contains the answer | 4 of 5 |5/5|5/5|5/5|MET|
+| 2. Every answer names a source |5 of 5|5/5|5/5|5/5|MISSED|
+| 3. Gate stops out-of-corpus questions | 4 of 5|5/5|5/5|5/5|MET|
+| 4. No chunk ends mid-sentence | 94 of 94 | 94/94 | 94/94 | 94/94 | MET |
+| 5. Named source contains the answer | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
 
-<!-- Underneath, paste the REAL output for each criterion from one of your
-     runs — the actual text your system produced, not a description of it.
-     Name the file and function that produced it. -->
+Criterion 2's run columns count the five gated-through answers, all of which named a source. The MISSED comes from the five gate refusals, which name no source and are measured in the same single pass as criterion 3.
+
+### Real output
+
+**Criterion 1 — retrieved chunks contain the answer.**
+Produced by `run_eval.py::run_once`, retrieval by `store.py::search`.
+
+```
+### Where can I go birdwatching?  — run 1
+
+- Best distance: 0.5729 (passed the gate)
+- Sources retrieved: guide_eating.md, guide_elder_ness.md, guide_halden_bay.md
+```
+
+**Criterion 2 — every answer names a source.**
+Produced by `generate.py::answer_from_chunks`.
+
+```
+You can go birdwatching at Elder Ness, which is known for spring and autumn
+migration (April to May and September to October).
+
+Source: `guide_elder_ness.md`
+```
+
+**Criterion 3 — the gate stops out-of-corpus questions.**
+Produced by `run_eval.py::check_out_of_scope`, cutoff 0.7.
+
+| Out-of-scope question | Best distance | Gate |
+|---|---|---|
+| What is the capital of Mongolia? | 0.810 | refused |
+| How do I change the oil in a diesel engine? | 0.881 | refused |
+| Who won the 1994 World Cup? | 0.969 | refused |
+| What is the recommended dosage of ibuprofen for a headache? | 0.835 | refused |
+| How do I write a for loop in Rust? | 0.861 | refused |
+
+**Criterion 4 — no chunk ends mid-sentence.**
+Produced by `chunker.py::split_documents`.
+
+```
+94 chunks
+
+--- guide_accessibility.md (183 chars) ---
+Getting around the region with limited mobility — Overview
+
+An honest assessment rather than a promotional one. Some of these places are
+difficult and it is better to know in advance.
+```
+
+**Criterion 5 — the named source contains the answer.**
+Answer from `generate.py::answer_from_chunks`, verified against `corpora/city_guides/documents/`.
+
+The birdwatching answer above cites `guide_elder_ness.md`, and that file is the only one in my corpus that mentions birds at all.
+
 
 ## Verdicts
 
@@ -231,13 +281,13 @@ headings with no overlap, which matched what I'd seen reading the guides.
 
      Milestone 2. -->
 
-| # | Criterion | Verdict | How I decided |
-|---|---|---|---|
-| 1 |  |  |  |
-| 2 |  |  |  |
-| 3 |  |  |  |
-| 4 |  |  |  |
-| 5 |  |  |  |
+| # | Criterion  | Verdict | How I decided  |
+|---|---|---|--- |
+| 1 | Retrieved chunks containing the answer | MET | Checked the retrieved chunks directly, not the answers, the expected text appears in at least one chunk for all 5 questions. Target was 4 of 5. |
+| 2 | Every answer names a source | MISSED | 15 of 20. All 15 gated-through answers named a source, but the 5 gate refusals named none, and I did state "every answer." |
+| 3 | Gate stops out-of-corpus questions | MET | 5 of 5 refused. Closest out-of-scope distance was 0.810 against a 0.70 cutoff, so none was near the line. Measured in one deterministic pass. |
+| 4 | No chunk ends mid-sentence | MET | All 94 chunks end with a period — I checked the last character of every one. Target was no exceptions. |
+| 5 | Named source contains the answer | MET | 5 of 5. Opened each cited guide and confirmed it contains the answer given. Target was 4 of 5. |
 
 ## Diagnoses
 
@@ -258,6 +308,28 @@ headings with no overlap, which matched what I'd seen reading the guides.
      low, and which one you'd tighten and to what.
 
      Milestone 3. -->
+
+**Criterion 2 — every answer names a source. MISSED, 15 of 20.**
+
+No pipeline stage caused this. Generation worked: all 15 answers that reached the
+model named a source, and the 5 that didn't were gate refusals, which have no
+chunks to cite.
+
+<!-- TODO: the mechanism. Say what DID cause it — the criterion's wording, not
+     the code. See the Diagnoses instructions: "the stage alone isn't enough". -->
+
+**Were my targets set low?**
+
+Criterion 3 had the most room. The gap between my real questions (worst 0.573) and my out-of-scope ones (best 0.810) is over 0.2 wide, against a cutoff of 0.70. My out-of-scope questions — Mongolia, diesel engines, the 1994 World Cup — are nowhere near my corpus. I proved the gate blocks obviously foreign questions, not that it blocks out-of-corpus ones.
+
+Criterion 2 asked the model to repeat a filename already sitting in its prompt. That was never going to be hard.
+
+Criterion 1 was my best prediction and it was wrong. I expected birdwatching to be the hard one because only `guide_elder_ness.md` mentions birds. It scored 0.573 and retrieval found it every time.
+
+<!-- TODO: "which one you'd tighten and to what" — the instructions ask for it
+     and it isn't answered yet. -->
+
+
 
 ## The Improvement
 
