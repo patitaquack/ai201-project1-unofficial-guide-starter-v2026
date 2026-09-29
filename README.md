@@ -21,7 +21,7 @@
 
 ## What This Does
 
-This is a question-answering system over `city_guides`, a corpus of 14 travel
+This is a question-answering system over city_guides, a corpus of 14 travel
 guides to towns and villages in one fictional region — Givens Mill, Halden Bay,
 Thornby Wells and eleven others — plus four cross-cutting guides on eating,
 walking, transport and accessibility.
@@ -36,12 +36,12 @@ information about that" rather than a plausible invention.
 
 ## Chunking Strategy
 
-**Chunk size:** one `##` section per chunk — not a fixed number. In practice
+**Chunk size:** one ## section per chunk — not a fixed number. In practice
 183 to 758 characters, 319 on average.
 **Overlap:** none.
 
-Every document in `city_guides` is a Markdown guide to one town, divided into
-labelled `##` sections — Getting there, Eat and drink, When to go. Each section
+Every document in city_guides is a Markdown guide to one town, divided into
+labelled ## sections — Getting there, Eat and drink, When to go. Each section
 is a self-contained topic, and no section depends on the one before it. The
 document already says where the boundaries are, so a fixed character count is
 the wrong instrument: it ignores the structure that's sitting right there.
@@ -53,21 +53,21 @@ cut never lands mid-sentence, there is nothing for an overlap to rescue, which
 is the only job overlap was doing.
 
 Every chunk is prefixed with its document title. This turned out to matter more
-than the split itself: the town name appears only in the `# Givens Mill` title
+than the split itself: the town name appears only in the # Givens Mill title
 at the top of the file, never in the sections beneath it, which say "the mill"
 and "the tearoom". Without the prefix, 13 other guides describe their parking
 and their pubs in near-identical language and nothing distinguishes them.
 
 The starter's fixed 800-character windows gave 51 chunks, 33 of them cut
 mid-sentence and 8 under 200 characters — the shortest was 24, a bare
-`## Getting there` heading with its content sliced into the next chunk. The new
+## Getting there heading with its content sliced into the next chunk. The new
 strategy gives 94 chunks, none cut mid-sentence, shortest 183.
 
 ## Sample Chunks
 
 
 
-**Chunk 1** — source: `guide_accessibility.md#0` — produced by: `chunker.py::split_documents`
+**Chunk 1** — source: guide_accessibility.md#0 — produced by: chunker.py::split_documents
 
 Getting around the region with limited mobility — Overview
 
@@ -75,7 +75,7 @@ An honest assessment rather than a promotional one. Some of these places are
 difficult and it is better to know in advance.
 
 
-**Chunk 2** — source: `guide_corry_vale.md#5` — produced by: `chunker.py::split_documents`
+**Chunk 2** — source: guide_corry_vale.md#5 — produced by: chunker.py::split_documents
 
 
 Corry Vale — Where to stay
@@ -83,7 +83,7 @@ Corry Vale — Where to stay
 Perhaps thirty beds in the entire valley, spread across two pubs and a handful of farmhouse rooms. In summer these are booked months ahead. Camping is permitted on two marked fields and nowhere else.
 
 
-**Chunk 3** — source: `guide_givens_mill.md#2` — produced by: `chunker.py::split_documents`
+**Chunk 3** — source: guide_givens_mill.md#2 — produced by: chunker.py::split_documents
 
 
 Givens Mill — Getting around
@@ -91,7 +91,7 @@ Givens Mill — Getting around
 Everything is on one street along the river. The mill is at one end and the church at the other, eight minutes apart. The riverside path continues in both directions for as far as you want to walk.
 
 
-**Chunk 4** — source: `guide_kestrelford.md#4` — produced by: `chunker.py::split_documents`
+**Chunk 4** — source: guide_kestrelford.md#4 — produced by: chunker.py::split_documents
 
 
 Kestrelford — What to see
@@ -99,7 +99,7 @@ Kestrelford — What to see
 The market square on a Saturday morning is the main event and has run continuously since the 1400s. The parish church has a 13th-century tower you can climb for £2. The old trackbed walk runs six miles to the next village along an easy gradient and is the best half-day here.
 
 
-**Chunk 5** — source: `guide_pellew_sands.md#6` — produced by: `chunker.py::split_documents`
+**Chunk 5** — source: guide_pellew_sands.md#6 — produced by: chunker.py::split_documents
 
 
 Pellew Sands — When to go
@@ -192,21 +192,11 @@ headings with no overlap, which matched what I'd seen reading the guides.
 
 # Unit 2
 
-<!-- These sections get ADDED to what's already above. Don't delete or rewrite
-     unit 1 — the point is that someone can see what you said before you knew
-     how it went. -->
+
 
 ## Run Log — Before
 
-<!-- Your five criteria, three runs each. `python run_eval.py --label before`
-     runs the questions, puts the OUT_OF_SCOPE ones through the gate, and
-     writes it all into results/ for you. Targets come from criteria.md; the
-     verdict column is your call.
 
-     Criterion 3 is measured in one deterministic pass rather than three, so
-     the same number goes in all three run columns. That's correct, not lazy.
-
-     Milestone 1. -->
 
 | Criterion | Target | Run 1 | Run 2 | Run 3 | Verdict |
 |---|---|---|---|---|---|
@@ -223,25 +213,25 @@ Criterion 2's run columns count the five gated-through answers, all of which nam
 **Criterion 1 — retrieved chunks contain the answer.**
 Produced by `run_eval.py::run_once`, retrieval by `store.py::search`.
 
-```
+
 ### Where can I go birdwatching?  — run 1
 
 - Best distance: 0.5729 (passed the gate)
 - Sources retrieved: guide_eating.md, guide_elder_ness.md, guide_halden_bay.md
-```
+
 
 **Criterion 2 — every answer names a source.**
-Produced by `generate.py::answer_from_chunks`.
+Produced by generate.py::answer_from_chunks.
 
-```
+
 You can go birdwatching at Elder Ness, which is known for spring and autumn
 migration (April to May and September to October).
 
 Source: `guide_elder_ness.md`
-```
+
 
 **Criterion 3 — the gate stops out-of-corpus questions.**
-Produced by `run_eval.py::check_out_of_scope`, cutoff 0.7.
+Produced by run_eval.py::check_out_of_scope, cutoff 0.7.
 
 | Out-of-scope question | Best distance | Gate |
 |---|---|---|
@@ -252,7 +242,7 @@ Produced by `run_eval.py::check_out_of_scope`, cutoff 0.7.
 | How do I write a for loop in Rust? | 0.861 | refused |
 
 **Criterion 4 — no chunk ends mid-sentence.**
-Produced by `chunker.py::split_documents`.
+Produced by chunker.py::split_documents
 
 ```
 94 chunks
@@ -265,21 +255,13 @@ difficult and it is better to know in advance.
 ```
 
 **Criterion 5 — the named source contains the answer.**
-Answer from `generate.py::answer_from_chunks`, verified against `corpora/city_guides/documents/`.
+Answer from generate.py::answer_from_chunks, verified against corpora/city_guides/documents/
 
-The birdwatching answer above cites `guide_elder_ness.md`, and that file is the only one in my corpus that mentions birds at all.
+The birdwatching answer above cites guide_elder_ness.md, and that file is the only one in my corpus that mentions birds at all.
 
 
 ## Verdicts
 
-<!-- MET or MISSED for each of the five, against the target you wrote last
-     unit — not a new one. Plus a sentence on how you decided. That sentence
-     matters most where it was close.
-
-     If your target said 4 of 5 and your runs came out 4, 3, 4, that's a MISS.
-     The target has to hold, not show up occasionally.
-
-     Milestone 2. -->
 
 | # | Criterion  | Verdict | How I decided  |
 |---|---|---|--- |
@@ -291,23 +273,7 @@ The birdwatching answer above cites `guide_elder_ness.md`, and that file is the 
 
 ## Diagnoses
 
-<!-- For each miss: which stage caused it, and how. The stage alone isn't
-     enough — you need the mechanism.
 
-     Not a diagnosis: "Question 3 didn't work."
-     A diagnosis:     "Question 3 asks about laundry costs. The answer is in
-                       one sentence that got split across two chunks, so
-                       neither chunk on its own contains it."
-
-     The five stages: loading → chunking → embedding → retrieval → generation.
-
-     Look for a pattern. If three misses all ask about numbers, that's one
-     problem, not three.
-
-     Missed nothing? Say so, then say honestly whether your targets were set
-     low, and which one you'd tighten and to what.
-
-     Milestone 3. -->
 
 **Criterion 2 — every answer names a source. MISSED, 15 of 20.**
 
@@ -315,8 +281,11 @@ No pipeline stage caused this. Generation worked: all 15 answers that reached th
 model named a source, and the 5 that didn't were gate refusals, which have no
 chunks to cite.
 
-<!-- TODO: the mechanism. Say what DID cause it — the criterion's wording, not
-     the code. See the Diagnoses instructions: "the stage alone isn't enough". -->
+The fault is in the criterion. I wrote "every answer the system produces," and a
+refusal is an answer the system produces. So criterion 2 counted every success
+of criterion 3 as a failure of criterion 2. The two criteria were in direct
+conflict and I did not notice until I scored them. The mechanism is my wording,
+not my code — nothing in generate.py or gate.py would change if I fixed it.
 
 **Were my targets set low?**
 
@@ -326,8 +295,15 @@ Criterion 2 asked the model to repeat a filename already sitting in its prompt. 
 
 Criterion 1 was my best prediction and it was wrong. I expected birdwatching to be the hard one because only `guide_elder_ness.md` mentions birds. It scored 0.573 and retrieval found it every time.
 
-<!-- TODO: "which one you'd tighten and to what" — the instructions ask for it
-     and it isn't answered yet. -->
+**The one I'd tighten:** criterion 3. I'd replace my out-of-scope questions with
+ones that use my corpus's own vocabulary but ask about things it doesn't cover.
+"Where is the nearest campsite to Elder Ness?" names a real town from my guides,
+but no guide mentions campsites. Those land far closer to the 0.70 cutoff than
+Mongolia did, and they are a real test of where the cutoff belongs.
+
+A second candidate is criterion 1. My top-k is 5, so "the retrieved chunks
+include one that contains the answer" gives the system five chances. Tightening
+it to the top 3 would be a meaningfully harder target.
 
 
 
@@ -335,23 +311,39 @@ Criterion 1 was my best prediction and it was wrong. I expected birdwatching to 
 
 **What I changed:**
 
+I added a keyword check to the relevance gate. It was comparing distance only.
+It now also checks whether the question's content words appear anywhere in the
+retrieved chunks, and refuses when they don't. The code is
+gate.py::unsupported_terms, called from gate.py::check.
+
+I also replaced the five questions in OUT_OF_SCOPE. That is a better
+measurement rather than part of the fix — without it, before and after look
+identical, because the old gate refuses Mongolia either way.
+
 **Why I picked it:**
 
-<!-- Connect it to a specific diagnosis above in one sentence. If you can't,
-     you picked a fix because it sounded impressive. -->
+My diagnosis said criterion 3's MET was an artifact of easy out-of-scope
+questions, and when I wrote harder ones the gate let all five through at
+distances as low as 0.327 — better than four of my five real questions.
 
 ### Run Log — After
 
-<!-- Same format, same five criteria, three runs each.
-     `python run_eval.py --label after` -->
+
+
+Produced by run_eval.py::mai, written to results/run_2026-09-29_1352_after.md.
+15 model calls. Same model as the before run.
 
 | Criterion | Target | Run 1 | Run 2 | Run 3 | Verdict |
 |---|---|---|---|---|---|
-| 1. Retrieved chunk contains the answer | 4 of 5 |  |  |  |  |
-| 2. Every answer names a source | 5 of 5 |  |  |  |  |
-| 3. Gate stops out-of-corpus questions | 4 of 5 |  |  |  |  |
-| 4. | | | | | |
-| 5. | | | | | |
+| 1. Retrieved chunk contains the answer | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 2. Every answer names a source | 5 of 5 | 5/5 | 5/5 | 5/5 | MISSED |
+| 3. Gate stops out-of-corpus questions | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 4. No chunk ends mid-sentence | 94 of 94 | 94/94 | 94/94 | 94/94 | MET |
+| 5. Named source contains the answer | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
+
+Criterion 2's run columns count the five gated-through answers, all of which
+named a source. The MISSED is still the five refusals, which name none. That
+number did not change because I did not change the wording.
 
 **Did it help?**
 
@@ -361,6 +353,33 @@ Criterion 1 was my best prediction and it was wrong. I expected birdwatching to 
      tell.
 
      Milestone 4. -->
+
+Yes, and I can say how much. The before and after run logs are not the honest
+comparison for criterion 3, because the questions changed between them. The
+honest comparison is the harder questions against each version of the gate,
+which costs no model calls and which I measured both ways:
+
+```
+harder questions, old gate (distance only)       0 of 5 refused
+harder questions, new gate (distance + keyword)  5 of 5 refused
+```
+
+Nothing regressed. All five real questions still pass the gate, all 15 answers
+still name a source, and criteria 1, 4 and 5 are unchanged.
+
+**The fix the assignment suggested is not the fix that worked.** I tried BM25
+scoring first, as the hybrid search option describes, and measured it:
+
+```
+REAL questions       best BM25  5.54 – 15.75
+UNCOVERED questions  best BM25  8.20 – 10.03
+```
+
+Those overlap, so no BM25 cutoff separates them. The reason is that questions
+like "Where is the nearest campsite to Elder Ness?" contain real town names,
+and BM25 rewards that match. BM25 asks how strongly a question matches. What I
+needed was whether any content word matches at all. That is the check I ended
+up writing.
 
 ## What's Still Broken
 
@@ -372,9 +391,63 @@ Criterion 1 was my best prediction and it was wrong. I expected birdwatching to 
 
      Milestone 5. -->
 
+**Criterion 2 is still MISSED, at 15 of 20.** I did not touch it. The fix is one
+sentence — change "every answer" to "every answer that passed the relevance
+gate" — but that is a revision to a criterion rather than a change to the
+system, and I had one improvement to spend on Milestone 4. I spent it on
+criterion 3, which was a real failure rather than a wording problem.
+
+**My stopword list is fitted to my own test set.** gate.py::STOPWORDS decides
+which words count as content words, and I built it by running my ten questions
+and adding whatever broke them — "find" had to go in because it made the
+seafood question fail. A new question using some other ordinary verb could be
+refused for no good reason. A real fix would use a standard English stopword
+list rather than one I tuned until my own tests passed.
+
+**The keyword check only sees the retrieved chunks.** If retrieval misses the
+one chunk that contains the answer, the check sees a corpus that appears not to
+cover the topic and refuses. That turns a retrieval failure into a refusal,
+which looks like correct behaviour in my run log. I have no test that would
+catch it.
+
+**I wrote all five out-of-corpus questions myself,** knowing what my corpus
+contains. Someone else's questions would be a fairer test, and five is a small
+number to conclude anything from.
+
 ## What I'd Do Differently
 
-<!-- Knowing what you know now — which of your five criteria would you write
-     differently, and why?
 
-     Milestone 5. -->
+
+Three of my five had measurement problems rather than result problems.
+
+**Criterion 2.** I'd write "every answer that passed the relevance gate names a
+source." As written it counted the gate's refusals as failures, so criterion 2
+punished criterion 3 for working. I did not notice the two contradicted each
+other until I scored them.
+
+**Criterion 1.** I'd say how I intended to measure it. "The retrieved chunks
+include one that contains the answer" sounds checkable, but my scorer reads the
+*answer text*, not the chunks — so for most of this unit I was measuring
+something different from what the criterion said, and I had to go back and
+check the chunks separately. I'd also tighten it to the top 3 rather than all of
+top-k, since my top-k is 5 and that gives the system five chances.
+
+**Criterion 3.** I'd pick harder out-of-scope questions from the start. Mongolia
+and diesel engines share no vocabulary with a regional travel guide, and the
+distances showed it — nothing under 0.810 against a 0.70 cutoff. I only found
+out my gate was broken because I went looking in Milestone 3.
+
+**Criterion 5.** I'd say what happens when an answer names two files. I wrote
+"*the* guide the answer names," and two of my answers cited two guides each.
+Both contained the answer so it did not change the verdict, but the criterion
+does not say how to score it.
+
+**Criterion 4 is the one I'd keep as it is.** "No chunk ends mid-sentence" is a
+single thing I can check by looking at the last character of 94 chunks, and it
+gave the same answer every time. The difference is that I knew how I would
+measure it before I wrote it.
+
+**The pattern:** I wrote five criteria before I had any way to check them. The
+one I could check mechanically is the one that held up. Next time I'd write the
+check at the same time as the criterion — if I can't say how I'd measure it, I
+don't really have a criterion yet.
